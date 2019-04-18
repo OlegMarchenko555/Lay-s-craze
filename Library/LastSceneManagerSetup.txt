@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/WAMAssets/CS_Assets/CS_Scenes/03-Game.unity
+  isLoaded: 1
+  isActive: 1
