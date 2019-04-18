@@ -58,7 +58,7 @@ namespace WhackAMole
         public int maximumTargets = 5;
 
         [Tooltip("How long to wait before showing the targets")]
-        public float showDelay = 4;
+        public float showDelay = 3;
 
   //      [Tooltip("How long to wait before hiding the targets again")]
   //      public float hideDelay = 2;
@@ -81,7 +81,7 @@ namespace WhackAMole
 
         [Tooltip("The score of the player")]
         public bool bEffect = false;
-        public int iEffect = 0;
+        public int iEffect = -1;
         public float fTotalTime = 5.0f;
         public Text EffectTitleText;
         public Text EffectTimeText;
@@ -90,6 +90,9 @@ namespace WhackAMole
         public Transform scoreText;
 		internal int highScore = 0;
 		internal int scoreMultiplier = 1;
+
+        public int iSuccessCount = 0;
+        public float fShowDefaultDelay;
 
 		// Various canvases for the UI
 		public Transform gameCanvas;
@@ -178,7 +181,7 @@ namespace WhackAMole
                         case 1:
                             break;
                         case 2:
-                            showDelay = 3;
+                            showDelay = fShowDefaultDelay;
                             break;
                         case 3:
                             break;
@@ -187,10 +190,10 @@ namespace WhackAMole
                         case 5:
                             break;
                         case 6:
-                            showDelay = 3;
+                            showDelay = fShowDefaultDelay;
                             break;
                         case 7:
-                            showDelay = 3;
+                            showDelay = fShowDefaultDelay;
                             break;
                     }
                     EffectTimeText.text = "";
@@ -292,6 +295,11 @@ namespace WhackAMole
                     WAMMole[] previousTargets = GameObject.FindObjectsOfType<WAMMole>();
                     if (previousTargets.Length == 0)
                     {
+                        if(iEffect == -1)
+                        {
+                            showDelay = fShowDefaultDelay;
+                        }
+
                         ShowTargets(maximumTargets);
                     }
 
@@ -438,6 +446,18 @@ namespace WhackAMole
 
                         // Add the bonus to the score
                         ChangeScore(hitTargetBonus * scoreMultiplier);// streak * hitSource.GetComponent<WAMMole>().bonusMultiplier);
+
+                        iSuccessCount++;
+                        int iSpeed = iSuccessCount / 5;
+
+                        if(iSuccessCount == iSpeed * 5)
+                        {
+                            fShowDefaultDelay *= (1.0f - iSpeed * 0.1f);
+                        }
+                        if(fShowDefaultDelay < 1.0f)
+                        {
+                            fShowDefaultDelay = 1.0f;
+                        }
                     }
                 }
                 else
@@ -457,7 +477,7 @@ namespace WhackAMole
                 switch(hitSource.GetComponent<WAMMole>().index)
                 {
                     case 0:
-                        showDelay = 3;
+                        showDelay = fShowDefaultDelay;
                         scoreMultiplier = 2;
 
                         iEffect = 0;
@@ -481,7 +501,7 @@ namespace WhackAMole
                         break;
                     case 2:
                         scoreMultiplier = 1;
-                        showDelay = 6;
+                        showDelay = fShowDefaultDelay * 2;
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets2 = GameObject.FindObjectsOfType<WAMMole>();
@@ -503,7 +523,7 @@ namespace WhackAMole
                         bEffect = true;
                         break;
                     case 3:
-                        showDelay = 3;
+                        showDelay = fShowDefaultDelay;
                         scoreMultiplier = 1;
 
                         iEffect = 3;
@@ -530,7 +550,7 @@ namespace WhackAMole
                         break;
                     case 6:
                         scoreMultiplier = 1;
-                        showDelay = 1.5f;
+                        showDelay = fShowDefaultDelay / 2.0f;
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets6 = GameObject.FindObjectsOfType<WAMMole>();

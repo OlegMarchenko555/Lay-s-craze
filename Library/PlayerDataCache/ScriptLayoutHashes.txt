@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-F:/Unity/Whom/Craze05.apk
+F:/Unity/Whom/Craze07.apk
 SceneListBegin?
 Assets/WAMAssets/CS_Assets/CS_Scenes/01-Splash.unity
 Assets/WAMAssets/CS_Assets/CS_Scenes/02-Menu.unity
@@ -156,7 +156,7 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 3ee1de124ab8fc0df7b6ea67889a0ead Assembly-CSharp.dll:WhackAMole.WAMSelectButton
-465cb4fcf3fc9086842eccd28a0317b0 Assembly-CSharp.dll:WhackAMole.WAMGameController
+90ee6c9990f12e52582ef201cb23c28e Assembly-CSharp.dll:WhackAMole.WAMGameController
 a2a16b229e42e610c1a413614737c645 Assembly-CSharp.dll:WhackAMole.WAMRemoveAfterTime
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 d1b0534950b2a9962e6453d416a828c7 Assembly-CSharp.dll:WhackAMole.WAMMole
