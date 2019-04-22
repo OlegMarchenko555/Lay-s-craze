@@ -56,6 +56,8 @@ namespace WhackAMole
 
         [Tooltip("Ice Mask")]
         public GameObject IceMaskObj;
+        public GameObject SnailMaskObj;
+        public GameObject AirplaneMaskObj;
 
         [Tooltip("How many targets to show at once")]
         public int maximumTargets = 5;
@@ -184,6 +186,7 @@ namespace WhackAMole
                         case 1:
                             break;
                         case 2:
+                            SnailMaskObj.SetActive(false);
                             showDelay = fShowDefaultDelay;
                             break;
                         case 3:
@@ -193,6 +196,7 @@ namespace WhackAMole
                         case 5:
                             break;
                         case 6:
+                            AirplaneMaskObj.SetActive(false);
                             showDelay = fShowDefaultDelay;
                             break;
                         case 7:
@@ -485,6 +489,8 @@ namespace WhackAMole
                         showDelay = fShowDefaultDelay;
                         scoreMultiplier = 2;
                         IceMaskObj.SetActive(false);
+                        SnailMaskObj.SetActive(false);
+                        AirplaneMaskObj.SetActive(false);
 
                         iEffect = 0;
                         fTotalTime = 10.0f;
@@ -494,6 +500,8 @@ namespace WhackAMole
                         break;
                     case 1:
                         IceMaskObj.SetActive(false);
+                        SnailMaskObj.SetActive(false);
+                        AirplaneMaskObj.SetActive(false);
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets1 = GameObject.FindObjectsOfType<WAMMole>();
@@ -511,6 +519,8 @@ namespace WhackAMole
                         scoreMultiplier = 1;
                         showDelay = fShowDefaultDelay * 2;
                         IceMaskObj.SetActive(false);
+                        SnailMaskObj.SetActive(true);
+                        AirplaneMaskObj.SetActive(false);
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets2 = GameObject.FindObjectsOfType<WAMMole>();
@@ -535,6 +545,8 @@ namespace WhackAMole
                         showDelay = fShowDefaultDelay;
                         scoreMultiplier = 1;
                         IceMaskObj.SetActive(false);
+                        SnailMaskObj.SetActive(false);
+                        AirplaneMaskObj.SetActive(false);
 
                         iEffect = 3;
                         fTotalTime = 10.0f;
@@ -544,10 +556,15 @@ namespace WhackAMole
                         break;
                     case 4:
                         IceMaskObj.SetActive(false);
+                        SnailMaskObj.SetActive(false);
+                        AirplaneMaskObj.SetActive(false);
+
                         StartCoroutine(GameOver(0));
                         break;
                     case 5:
                         IceMaskObj.SetActive(false);
+                        SnailMaskObj.SetActive(false);
+                        AirplaneMaskObj.SetActive(false);
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets5 = GameObject.FindObjectsOfType<WAMMole>();
@@ -565,6 +582,8 @@ namespace WhackAMole
                         scoreMultiplier = 1;
                         showDelay = fShowDefaultDelay / 2.0f;
                         IceMaskObj.SetActive(false);
+                        SnailMaskObj.SetActive(false);
+                        AirplaneMaskObj.SetActive(true);
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets6 = GameObject.FindObjectsOfType<WAMMole>();
@@ -585,6 +604,8 @@ namespace WhackAMole
                         scoreMultiplier = 1;
                         showDelay = 10;
                         IceMaskObj.SetActive(true);
+                        SnailMaskObj.SetActive(false);
+                        AirplaneMaskObj.SetActive(false);
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets7 = GameObject.FindObjectsOfType<WAMMole>();
