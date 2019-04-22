@@ -34,11 +34,13 @@ public class MenuManager : MonoBehaviour {
         {
             if(i == index)
             {
-                PackList[i].sprite = PackSelectedList[i];
+                //PackList[i].sprite = PackSelectedList[i];
+                PackList[i].transform.localScale = Vector3.one * 1.2f;
             }
             else
             {
-                PackList[i].sprite = PackNormalList[i];
+                //PackList[i].sprite = PackNormalList[i];
+                PackList[i].transform.localScale = Vector3.one * 1.0f;
             }
         }
     }

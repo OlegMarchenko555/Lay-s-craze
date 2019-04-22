@@ -54,6 +54,9 @@ namespace WhackAMole
         [Tooltip("A list of targets ( The powers that appear and hide in the holes )")]
         public Transform[] powers;
 
+        [Tooltip("Ice Mask")]
+        public GameObject IceMaskObj;
+
         [Tooltip("How many targets to show at once")]
         public int maximumTargets = 5;
 
@@ -193,7 +196,9 @@ namespace WhackAMole
                             showDelay = fShowDefaultDelay;
                             break;
                         case 7:
+                            IceMaskObj.SetActive(false);
                             showDelay = fShowDefaultDelay;
+                            ShowTargets(maximumTargets);
                             break;
                     }
                     EffectTimeText.text = "";
@@ -479,6 +484,7 @@ namespace WhackAMole
                     case 0:
                         showDelay = fShowDefaultDelay;
                         scoreMultiplier = 2;
+                        IceMaskObj.SetActive(false);
 
                         iEffect = 0;
                         fTotalTime = 10.0f;
@@ -487,13 +493,15 @@ namespace WhackAMole
                         bEffect = true;
                         break;
                     case 1:
+                        IceMaskObj.SetActive(false);
+
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets1 = GameObject.FindObjectsOfType<WAMMole>();
 
                         // Go through each object found, and remove it
                         foreach (WAMMole previousTarget in previousTargets1)
                         {
-                            if (PlayerPrefs.GetInt("Pack") != previousTarget.index)
+                            if (PlayerPrefs.GetInt("Pack") != previousTarget.index && previousTarget.power == 0)
                             {
                                 Destroy(previousTarget.gameObject);
                             }
@@ -502,6 +510,7 @@ namespace WhackAMole
                     case 2:
                         scoreMultiplier = 1;
                         showDelay = fShowDefaultDelay * 2;
+                        IceMaskObj.SetActive(false);
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets2 = GameObject.FindObjectsOfType<WAMMole>();
@@ -517,14 +526,15 @@ namespace WhackAMole
                         }
 
                         iEffect = 2;
-                        fTotalTime = 10.0f;
-                        EffectTimeText.text = "10";
+                        fTotalTime = 5.0f;
+                        EffectTimeText.text = "5";
                         EffectTitleText.text = "easy chilli";
                         bEffect = true;
                         break;
                     case 3:
                         showDelay = fShowDefaultDelay;
                         scoreMultiplier = 1;
+                        IceMaskObj.SetActive(false);
 
                         iEffect = 3;
                         fTotalTime = 10.0f;
@@ -533,16 +543,19 @@ namespace WhackAMole
                         bEffect = true;
                         break;
                     case 4:
+                        IceMaskObj.SetActive(false);
                         StartCoroutine(GameOver(0));
                         break;
                     case 5:
+                        IceMaskObj.SetActive(false);
+
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets5 = GameObject.FindObjectsOfType<WAMMole>();
 
                         // Go through each object found, and remove it
                         foreach (WAMMole previousTarget in previousTargets5)
                         {
-                            if (PlayerPrefs.GetInt("Pack") == previousTarget.index)
+                            if (PlayerPrefs.GetInt("Pack") == previousTarget.index && previousTarget.power == 0)
                             {
                                 Destroy(previousTarget.gameObject);
                             }
@@ -551,6 +564,7 @@ namespace WhackAMole
                     case 6:
                         scoreMultiplier = 1;
                         showDelay = fShowDefaultDelay / 2.0f;
+                        IceMaskObj.SetActive(false);
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets6 = GameObject.FindObjectsOfType<WAMMole>();
@@ -570,6 +584,7 @@ namespace WhackAMole
                     case 7:
                         scoreMultiplier = 1;
                         showDelay = 10;
+                        IceMaskObj.SetActive(true);
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets7 = GameObject.FindObjectsOfType<WAMMole>();
@@ -577,16 +592,16 @@ namespace WhackAMole
                         // Go through each object found, and remove it
                         foreach (WAMMole previousTarget in previousTargets7)
                         {
-                            previousTarget.hideDelay *= 2;
-                            if (previousTarget.hideDelay > showDelay)
-                            {
-                                previousTarget.hideDelay = showDelay;
-                            }
+                            previousTarget.hideDelay = showDelay;
+                            //if (previousTarget.hideDelay > showDelay)
+                            //{
+                            //    previousTarget.hideDelay = showDelay;
+                            //}
                         }
 
                         iEffect = 7;
-                        fTotalTime = 10.0f;
-                        EffectTimeText.text = "10";
+                        fTotalTime = 5.0f;
+                        EffectTimeText.text = "5";
                         EffectTitleText.text = "freezing thyme";
                         bEffect = true;
                         break;

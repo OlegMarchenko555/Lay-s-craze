@@ -8,6 +8,8 @@ namespace WhackAMole
         // A referemce to the Game Controller, which is taken by the first time this script runs, and is remembered across all other scripts of this type
         static GameObject gameController;
 
+        public GameObject ParticleObj;
+
         // The animated part of the pack. By default this is taken from this object
         internal Animator packAnimator;
 
@@ -37,7 +39,7 @@ namespace WhackAMole
         internal float showTime = 0;
 
         // How long to wait before hiding the pack, after it has been revealed
-        internal float hideDelay = 0;
+        public float hideDelay = 0;
 
         [Tooltip("The animation name when showing a pack")]
         public string animationShow = "packShow";
@@ -87,6 +89,11 @@ namespace WhackAMole
             {
                 // Give hit bonus for this target
                 gameController.SendMessage("HitBonus", this.transform);
+
+                if(GetComponent<WAMMole>().power == 1)
+                {
+                    ParticleObj.SetActive(true);
+                }
 
                 // Change the health of the target
                 ChangeHealth(-1);
