@@ -35,7 +35,7 @@ public class MenuManager : MonoBehaviour {
             if(i == index)
             {
                 //PackList[i].sprite = PackSelectedList[i];
-                PackList[i].transform.localScale = Vector3.one * 1.2f;
+                PackList[i].transform.localScale = Vector3.one * 1.5f;
             }
             else
             {

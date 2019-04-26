@@ -75,6 +75,11 @@ namespace WhackAMole
 
                 // If enough time passes, hide the pack
                 if (hideDelay <= 0) Hidepack();
+
+                //if (GetComponent<WAMMole>().power == 1)
+                //{
+                //    Debug.Log("Position1:" + gameObject.transform.position);
+                //}
             }
         }
 
@@ -92,7 +97,11 @@ namespace WhackAMole
 
                 if(GetComponent<WAMMole>().power == 1)
                 {
+                    LeanTween.move(gameObject, new Vector3(1.356f, 4.503f, 0), 0.2f);
                     ParticleObj.SetActive(true);
+
+//                    Debug.Log("Position1:" + gameObject.transform.position);
+//                    Debug.Log("Position2:" + FindObjectOfType<WAMGameController>().PowerPos.transform.position);
                 }
 
                 // Change the health of the target
@@ -144,7 +153,7 @@ namespace WhackAMole
 
             if (PlayerPrefs.GetInt("Pack") == GetComponent<WAMMole>().index)
             {
-                if (FindObjectOfType<WAMGameController>().bEffect && FindObjectOfType<WAMGameController>().iEffect == 3)
+                if (FindObjectOfType<WAMGameController>().bPower && FindObjectOfType<WAMGameController>().iPower == 3)
                 {
 
                 }

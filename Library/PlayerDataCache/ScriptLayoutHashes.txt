@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-F:/Unity/Whom/Lay-s-craze/Craze11.apk
+F:/Unity/Whom/Lay-s-craze/Craze12.apk
 SceneListBegin?
 Assets/WAMAssets/CS_Assets/CS_Scenes/01-Splash.unity
 Assets/WAMAssets/CS_Assets/CS_Scenes/02-Menu.unity
@@ -162,7 +162,7 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 3ee1de124ab8fc0df7b6ea67889a0ead Assembly-CSharp.dll:WhackAMole.WAMSelectButton
-4fe7da251a6099fc1dcbbf781a025d67 Assembly-CSharp.dll:WhackAMole.WAMGameController
+9a1adefed3ffb45ffd101d84c835f989 Assembly-CSharp.dll:WhackAMole.WAMGameController
 a2a16b229e42e610c1a413614737c645 Assembly-CSharp.dll:WhackAMole.WAMRemoveAfterTime
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 3f7b40b9dec82f7b3bef20c7dbdfcb1c Assembly-CSharp.dll:.CFX3_AutoStopLoopedEffect
@@ -170,3 +170,5 @@ a2a16b229e42e610c1a413614737c645 Assembly-CSharp.dll:WhackAMole.WAMRemoveAfterTi
 9c354d8cc0d2b625c87d5b3da48f6608 Assembly-CSharp.dll:.CFX_SpawnSystem
 e1048fb987503d69b1e1255ccf72e1f2 Assembly-CSharp.dll:.CFX3_Demo_Translate
 de4f6b1c2a6cb1a26b2dbbe8022dfa85 Assembly-CSharp.dll:WhackAMole.WAMPlaySound
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.LeanTween
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.LeanAudio

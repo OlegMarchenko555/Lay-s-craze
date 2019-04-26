@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/WAMAssets/CS_Assets/CS_Scenes/03-Game.unity
+- path: Assets/WAMAssets/CS_Assets/CS_Scenes/01-Splash.unity
   isLoaded: 1
   isActive: 1

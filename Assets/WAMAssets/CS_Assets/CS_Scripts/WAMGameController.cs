@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using WhackAMole.Types;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 namespace WhackAMole
 {
@@ -54,20 +55,23 @@ namespace WhackAMole
         [Tooltip("A list of targets ( The powers that appear and hide in the holes )")]
         public Transform[] powers;
 
-        [Tooltip("Ice Mask")]
-        public GameObject IceMaskObj;
-        public GameObject SnailMaskObj;
-        public GameObject AirplaneMaskObj;
-
         [Tooltip("How many targets to show at once")]
         public int maximumTargets = 5;
 
         [Tooltip("How long to wait before showing the targets")]
-        public float showDelay = 3;
+        public float birthDelay = 0.4f;
+        public float birthDefaultDelay = 0.4f;
+        private float fBirthTime;
 
-  //      [Tooltip("How long to wait before hiding the targets again")]
-  //      public float hideDelay = 2;
-		//internal float hideDelayCount = 0;
+        public int iSuccessCount = 0;
+
+        public float hideDefaultDelay = 1.0f;
+        public float hideDelay;
+
+
+        //      [Tooltip("How long to wait before hiding the targets again")]
+        //      public float hideDelay = 2;
+        //internal float hideDelayCount = 0;
 
         [Tooltip("The attack button, click it or tap it to attack with the hammer")]
         public string attackButton = "Fire1";
@@ -85,19 +89,15 @@ namespace WhackAMole
         public int score = 0;
 
         [Tooltip("The score of the player")]
-        public bool bEffect = false;
-        public int iEffect = -1;
-        public float fTotalTime = 5.0f;
-        public Text EffectTitleText;
-        public Text EffectTimeText;
+        public bool bPower = false;
+        public int iPower = -1;
+        public float fPowerTotalTime = 5.0f;
+        public Text PowerTimeText;
 
         [Tooltip("The score text object which displays the current score of the player")]
         public Transform scoreText;
 		internal int highScore = 0;
 		internal int scoreMultiplier = 1;
-
-        public int iSuccessCount = 0;
-        public float fShowDefaultDelay;
 
 		// Various canvases for the UI
 		public Transform gameCanvas;
@@ -105,9 +105,17 @@ namespace WhackAMole
 
 		// Is the game over?
 		internal bool  isGameOver = false;
-		
-		// Various sounds and their source
-		public AudioClip soundGameOver;
+
+
+        public List<Sprite> PowerSpriteList = new List<Sprite>();
+        public Image PowerImg;
+        public GameObject PowerPos;
+
+        public List<Sprite> EffectSpriteList = new List<Sprite>();
+        public SpriteRenderer EffectImg;
+
+        // Various sounds and their source
+        public AudioClip soundGameOver;
 		public string soundSourceTag = "GameController";
 		internal GameObject soundSource;
 		
@@ -115,6 +123,7 @@ namespace WhackAMole
 		internal int index = 0;
 
 		//public Transform slowMotionEffect;
+
 
 		void Awake()
 		{
@@ -124,6 +133,9 @@ namespace WhackAMole
 
                 playerAnimator = playerObject.GetComponent<Animator>();
             }
+
+            fBirthTime = birthDelay;
+            hideDelay = hideDefaultDelay;
         }
 
         /// <summary>
@@ -157,7 +169,7 @@ namespace WhackAMole
 			if ( GameObject.FindGameObjectWithTag(soundSourceTag) )    soundSource = GameObject.FindGameObjectWithTag(soundSourceTag);
 
 			//// Reset the spawn delay
-			//showDelayCount = 0;
+			//hideDelayCount = 0;
 
 			// Move the targets from one side of the screen to the other, and then reset them
 			/*foreach ( Transform movingTarget in packs )
@@ -174,11 +186,11 @@ namespace WhackAMole
 		/// </summary>
 		void  Update()
 		{
-            if (bEffect)
+            if (bPower)
             {
-                if (fTotalTime <= 0)
+                if (fPowerTotalTime <= 0)
                 {
-                    switch (iEffect)
+                    switch (iPower)
                     {
                         case 0:
                             scoreMultiplier = 1;
@@ -186,8 +198,9 @@ namespace WhackAMole
                         case 1:
                             break;
                         case 2:
-                            SnailMaskObj.SetActive(false);
-                            showDelay = fShowDefaultDelay;
+                            EffectImg.enabled = false;
+                            hideDelay = hideDefaultDelay;
+                            birthDelay = birthDefaultDelay;
                             break;
                         case 3:
                             break;
@@ -196,23 +209,25 @@ namespace WhackAMole
                         case 5:
                             break;
                         case 6:
-                            AirplaneMaskObj.SetActive(false);
-                            showDelay = fShowDefaultDelay;
+                            EffectImg.enabled = false;
+                            hideDelay = hideDefaultDelay;
+                            birthDelay = birthDefaultDelay;
                             break;
                         case 7:
-                            IceMaskObj.SetActive(false);
-                            showDelay = fShowDefaultDelay;
+                            EffectImg.enabled = false;
+                            hideDelay = hideDefaultDelay;
+                            birthDelay = birthDefaultDelay;
                             ShowTargets(maximumTargets);
                             break;
                     }
-                    EffectTimeText.text = "";
-                    EffectTitleText.text = "";
-                    bEffect = false;
+                    PowerTimeText.text = "";
+                    PowerImg.enabled = false;
+                    bPower = false;
                 }
                 else
                 {
-                    EffectTimeText.text = ((int)fTotalTime).ToString();
-                    fTotalTime -= Time.deltaTime;
+                    PowerTimeText.text = ((int)fPowerTotalTime).ToString();
+                    fPowerTotalTime -= Time.deltaTime;
                 }
             }
 
@@ -300,33 +315,31 @@ namespace WhackAMole
                         }
                     }
 
-                    // Remove any targets from previous levels
-                    WAMMole[] previousTargets = GameObject.FindObjectsOfType<WAMMole>();
-                    if (previousTargets.Length == 0)
+                    if(fBirthTime > 0)
                     {
-                        if(iEffect == -1)
-                        {
-                            showDelay = fShowDefaultDelay;
-                        }
-
+                        fBirthTime -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        fBirthTime = birthDelay;
                         ShowTargets(maximumTargets);
                     }
 
                     //// Count down to the next target spawn
-                    //if (showDelayCount > 0)
+                    //if (hideDelayCount > 0)
                     //{
-                    //    showDelayCount -= Time.deltaTime;
+                    //    hideDelayCount -= Time.deltaTime;
 
                     //}
                     //else
                     //{
                     //    // Reset the spawn delay count
-                    //    showDelayCount = birthDelay;
+                    //    hideDelayCount = birthDelay;
 
                     //    ShowTargets(maximumTargets);
                     //}
-				}
-			}
+                }
+            }
 		}
 
 		/// <summary>
@@ -355,14 +368,14 @@ namespace WhackAMole
 		/// <param name="targetCount">The maximum number of target that will appear</param>
 		void ShowTargets( int targetCount )
 		{
-            // Remove any targets from previous levels
-            WAMMole[] previousTargets = GameObject.FindObjectsOfType<WAMMole>();
+            //// Remove any targets from previous levels
+            //WAMMole[] previousTargets = GameObject.FindObjectsOfType<WAMMole>();
 
-            // Go through each object found, and remove it
-            foreach ( WAMMole previousTarget in previousTargets )
-            {
-                Destroy(previousTarget.gameObject);
-            }
+            //// Go through each object found, and remove it
+            //foreach ( WAMMole previousTarget in previousTargets )
+            //{
+            //    Destroy(previousTarget.gameObject);
+            //}
 
 			// Limit the number of tries when showing targets, so we don't get stuck in an infinite loop
 			int maximumTries = targetCount * 5;
@@ -407,7 +420,7 @@ namespace WhackAMole
                         newTarget.SetParent(spawnPositions[randomPosition]);
 
                         // Show a random animation state for the spawned target
-                        newTarget.SendMessage("ShowPack", showDelay);
+                        newTarget.SendMessage("ShowPack", hideDelay);
 
                         targetCount--;
                     }
@@ -419,7 +432,7 @@ namespace WhackAMole
                         newTarget.SetParent(spawnPositions[randomPosition]);
 
                         // Show a random animation state for the spawned target
-                        newTarget.SendMessage("ShowPack", showDelay);
+                        newTarget.SendMessage("ShowPack", hideDelay);
 
                         targetCount--;
                     }
@@ -447,9 +460,19 @@ namespace WhackAMole
                         Transform newBonusEffect = Instantiate(bonusEffect, hitSource.position + Vector3.up, Quaternion.identity) as Transform;
 
                         // Display the bonus value multiplied by a streak
-                        if (hitSource.GetComponent<WAMMole>().bonusMultiplier >= 0) newBonusEffect.Find("Text").GetComponent<Text>().text = "+" + (hitTargetBonus * scoreMultiplier).ToString();
-                        else newBonusEffect.Find("Text").GetComponent<Text>().text = (hitTargetBonus * scoreMultiplier).ToString();
+                        //if (hitSource.GetComponent<WAMMole>().bonusMultiplier >= 0) newBonusEffect.Find("Text").GetComponent<Text>().text = "+" + (hitTargetBonus * scoreMultiplier).ToString();
+                        //else 
 
+                        if(iPower == 0 && bPower)
+                        {
+                            newBonusEffect.Find("Text").GetComponent<Text>().color = Color.green;
+                            newBonusEffect.Find("Text").GetComponent<Outline>().effectColor = Color.black;
+                            newBonusEffect.Find("Text").GetComponent<Text>().text = (hitTargetBonus * scoreMultiplier).ToString();
+                        }
+                        else
+                        {
+                            newBonusEffect.Find("Text").GetComponent<Text>().text = (hitTargetBonus * scoreMultiplier).ToString();
+                        }
                         // Rotate the bonus text slightly
                         newBonusEffect.eulerAngles = Vector3.forward * Random.Range(-10, 10);
 
@@ -461,17 +484,24 @@ namespace WhackAMole
 
                         if(iSuccessCount == iSpeed * 5)
                         {
-                            fShowDefaultDelay *= (1.0f - iSpeed * 0.1f);
+                            birthDefaultDelay *= (1.0f - iSpeed * 0.1f);
+                            hideDefaultDelay *= (1.0f - iSpeed * 0.1f);
                         }
-                        if(fShowDefaultDelay < 1.0f)
+
+                        if (birthDefaultDelay < 0.1f)
                         {
-                            fShowDefaultDelay = 1.0f;
+                            birthDefaultDelay = 0.1f;
+                        }
+
+                        if (hideDefaultDelay < 0.2f)
+                        {
+                            hideDefaultDelay = 0.2f;
                         }
                     }
                 }
                 else
                 {
-                    if(bEffect && iEffect == 3)
+                    if(bPower && iPower == 3)
                     {
 
                     }
@@ -486,22 +516,22 @@ namespace WhackAMole
                 switch(hitSource.GetComponent<WAMMole>().index)
                 {
                     case 0:
-                        showDelay = fShowDefaultDelay;
+                        hideDelay = hideDefaultDelay;
+                        birthDelay = birthDefaultDelay;
                         scoreMultiplier = 2;
-                        IceMaskObj.SetActive(false);
-                        SnailMaskObj.SetActive(false);
-                        AirplaneMaskObj.SetActive(false);
 
-                        iEffect = 0;
-                        fTotalTime = 10.0f;
-                        EffectTimeText.text = "10";
-                        EffectTitleText.text = "spuddy";
-                        bEffect = true;
+                        EffectImg.sprite = EffectSpriteList[0];
+                        EffectImg.enabled = true;
+
+                        iPower = 0;
+                        fPowerTotalTime = 10.0f;
+                        PowerTimeText.text = "10";
+                        PowerImg.sprite = PowerSpriteList[0];
+                        PowerImg.enabled = true;
+                        bPower = true;
                         break;
                     case 1:
-                        IceMaskObj.SetActive(false);
-                        SnailMaskObj.SetActive(false);
-                        AirplaneMaskObj.SetActive(false);
+                        EffectImg.enabled = false;
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets1 = GameObject.FindObjectsOfType<WAMMole>();
@@ -517,10 +547,11 @@ namespace WhackAMole
                         break;
                     case 2:
                         scoreMultiplier = 1;
-                        showDelay = fShowDefaultDelay * 2;
-                        IceMaskObj.SetActive(false);
-                        SnailMaskObj.SetActive(true);
-                        AirplaneMaskObj.SetActive(false);
+                        hideDelay = hideDefaultDelay * 2;
+                        birthDelay = birthDefaultDelay * 2;
+
+                        EffectImg.sprite = EffectSpriteList[2];
+                        EffectImg.enabled = true;
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets2 = GameObject.FindObjectsOfType<WAMMole>();
@@ -529,42 +560,43 @@ namespace WhackAMole
                         foreach (WAMMole previousTarget in previousTargets2)
                         {
                             previousTarget.hideDelay *= 2;
-                            if (previousTarget.hideDelay > showDelay)
+                            if (previousTarget.hideDelay > hideDelay)
                             {
-                                previousTarget.hideDelay = showDelay;
+                                previousTarget.hideDelay = hideDelay;
                             }
                         }
 
-                        iEffect = 2;
-                        fTotalTime = 5.0f;
-                        EffectTimeText.text = "5";
-                        EffectTitleText.text = "easy chilli";
-                        bEffect = true;
+                        iPower = 2;
+                        fPowerTotalTime = 5.0f;
+                        PowerTimeText.text = "5";
+                        PowerImg.sprite = PowerSpriteList[2];
+                        PowerImg.enabled = true;
+                        bPower = true;
                         break;
                     case 3:
-                        showDelay = fShowDefaultDelay;
+                        hideDelay = hideDefaultDelay;
+                        birthDelay = birthDefaultDelay;
                         scoreMultiplier = 1;
-                        IceMaskObj.SetActive(false);
-                        SnailMaskObj.SetActive(false);
-                        AirplaneMaskObj.SetActive(false);
 
-                        iEffect = 3;
-                        fTotalTime = 10.0f;
-                        EffectTimeText.text = "10";
-                        EffectTitleText.text = "cheese up";
-                        bEffect = true;
+                        EffectImg.sprite = EffectSpriteList[3];
+                        EffectImg.enabled = true;
+
+                        iPower = 3;
+                        fPowerTotalTime = 10.0f;
+                        PowerTimeText.text = "10";
+                        PowerImg.sprite = PowerSpriteList[3];
+                        PowerImg.enabled = true;
+                        bPower = true;
                         break;
                     case 4:
-                        IceMaskObj.SetActive(false);
-                        SnailMaskObj.SetActive(false);
-                        AirplaneMaskObj.SetActive(false);
+                        EffectImg.sprite = EffectSpriteList[4];
+                        EffectImg.enabled = true;
 
                         StartCoroutine(GameOver(0));
                         break;
                     case 5:
-                        IceMaskObj.SetActive(false);
-                        SnailMaskObj.SetActive(false);
-                        AirplaneMaskObj.SetActive(false);
+                        EffectImg.sprite = EffectSpriteList[5];
+                        EffectImg.enabled = true;
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets5 = GameObject.FindObjectsOfType<WAMMole>();
@@ -580,10 +612,11 @@ namespace WhackAMole
                         break;
                     case 6:
                         scoreMultiplier = 1;
-                        showDelay = fShowDefaultDelay / 2.0f;
-                        IceMaskObj.SetActive(false);
-                        SnailMaskObj.SetActive(false);
-                        AirplaneMaskObj.SetActive(true);
+                        hideDelay = hideDefaultDelay / 2.0f;
+                        birthDelay = birthDefaultDelay / 2.0f;
+
+                        EffectImg.sprite = EffectSpriteList[6];
+                        EffectImg.enabled = true;
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets6 = GameObject.FindObjectsOfType<WAMMole>();
@@ -594,18 +627,20 @@ namespace WhackAMole
                             previousTarget.hideDelay /= 2;
                         }
 
-                        iEffect = 6;
-                        fTotalTime = 10.0f;
-                        EffectTimeText.text = "10";
-                        EffectTitleText.text = "chili rush";
-                        bEffect = true;
+                        iPower = 6;
+                        fPowerTotalTime = 10.0f;
+                        PowerTimeText.text = "10";
+                        PowerImg.sprite = PowerSpriteList[6];
+                        PowerImg.enabled = true;
+                        bPower = true;
                         break;
                     case 7:
                         scoreMultiplier = 1;
-                        showDelay = 10;
-                        IceMaskObj.SetActive(true);
-                        SnailMaskObj.SetActive(false);
-                        AirplaneMaskObj.SetActive(false);
+                        hideDelay = 10;
+                        birthDelay = 10;
+
+                        EffectImg.sprite = EffectSpriteList[7];
+                        EffectImg.enabled = true;
 
                         // Remove any targets from previous levels
                         WAMMole[] previousTargets7 = GameObject.FindObjectsOfType<WAMMole>();
@@ -613,18 +648,15 @@ namespace WhackAMole
                         // Go through each object found, and remove it
                         foreach (WAMMole previousTarget in previousTargets7)
                         {
-                            previousTarget.hideDelay = showDelay;
-                            //if (previousTarget.hideDelay > showDelay)
-                            //{
-                            //    previousTarget.hideDelay = showDelay;
-                            //}
+                            previousTarget.hideDelay = hideDelay;
                         }
 
-                        iEffect = 7;
-                        fTotalTime = 5.0f;
-                        EffectTimeText.text = "5";
-                        EffectTitleText.text = "freezing thyme";
-                        bEffect = true;
+                        iPower = 7;
+                        fPowerTotalTime = 5.0f;
+                        PowerTimeText.text = "5";
+                        PowerImg.sprite = PowerSpriteList[7];
+                        PowerImg.enabled = true;
+                        bPower = true;
                         break;
                 }
             }

@@ -68,6 +68,9 @@
     <Compile Include="Assets\JMO Assets\Cartoon FX\Scripts\CFX_LightIntensityFade.cs" />
     <Compile Include="Assets\JMO Assets\Cartoon FX\Scripts\CFX_ShurikenThreadFix.cs" />
     <Compile Include="Assets\JMO Assets\Cartoon FX\Spawn System\CFX_SpawnSystem.cs" />
+    <Compile Include="Assets\LeanTween\LeanAudio.cs" />
+    <Compile Include="Assets\LeanTween\LeanTest.cs" />
+    <Compile Include="Assets\LeanTween\LeanTween.cs" />
     <Compile Include="Assets\WAMAssets\CS_Assets\CS_Scripts\Types\Level.cs" />
     <Compile Include="Assets\WAMAssets\CS_Assets\CS_Scripts\WAMAnimateUI.cs" />
     <Compile Include="Assets\WAMAssets\CS_Assets\CS_Scripts\WAMGameController.cs" />
